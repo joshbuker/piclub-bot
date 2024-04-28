@@ -4,7 +4,12 @@ The main entrypoint to the bot
 
 import os
 
+from dotenv import load_dotenv
+
 import bot # TODO: Why can't I do `from . import bot`?
+
+# Load .env variables into environment
+load_dotenv()
 
 # Load configuration from environment
 TOKEN = os.getenv("DISCORD_TOKEN")
