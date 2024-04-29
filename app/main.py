@@ -6,9 +6,8 @@ import os
 
 from dotenv import load_dotenv
 
-import config
-
 # -------- Config --------
+import config
 
 # Load .env variables into environment
 load_dotenv()
@@ -24,7 +23,8 @@ config.ROOT_DIR = os.curdir
 
 config.DATA_DIR = os.path.join(config.ROOT_DIR, config.DATA_DIR)
 
-os.mkdir(config.DATA_DIR) # Ensure data directory is present
+if not os.path.exists(config.DATA_DIR):
+    os.mkdir(config.DATA_DIR) # Ensure data directory is present
 
 config.DB_NAME = os.path.join(config.DATA_DIR, config.DB_NAME)
 config.CONFIG_FILE = os.path.join(config.DATA_DIR, config.CONFIG_FILE)
@@ -33,6 +33,11 @@ config.CONFIG_FILE = os.path.join(config.DATA_DIR, config.CONFIG_FILE)
 
 # Import internal modules that depend on configuration after changes
 import bot # TODO: Why can't I do `from . import bot`?
+#import bot.config as botcfg
+
+#with open(config.CONFIG_FILE) as f:
+    #botcfg.botconfig.load_from_file(f)
+
 
 # Run bot
 try:
