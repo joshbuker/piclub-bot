@@ -7,11 +7,16 @@ class Resource:
 
     def __init__(self, name: str, link: str, desc: str):
         self.name = name
+        if not link.startswith("https://") and not link.startswith("http://"):
+            link = "https://" + link
         self.link = link
         self.desc = desc
 
     def __str__(self) -> str:
-        return f"[{self.name}]({self.link}): {self.desc}"
+        s = f"[{self.name}]({self.link})"
+        if self.desc != "":
+            s += f": {self.desc}"
+        return s
 
 
 class BotConfig:
@@ -27,15 +32,28 @@ class BotConfig:
     def load_from_file(self, f):
         cfg_obj = yaml.load(f, yaml.Loader)
 
-        if hasattr(cfg_obj, "command_prefix") and isinstance(cfg_obj.command_prefix, str):
-            self.command_prefix = cfg_obj.command_prefix
+        if "command_prefix" in cfg_obj and isinstance(cfg_obj["command_prefix"], str):
+            self.command_prefix = cfg_obj["command_prefix"]
 
-        if hasattr(cfg_obj, "greetings") and isinstance(cfg_obj.greetings, list):
+        if "greetings" in cfg_obj and isinstance(cfg_obj["greetings"], list):
             # Make sure all elements are strings
-            for e in cfg_obj.greetings:
+            for e in cfg_obj["greetings"]:
                 if not isinstance(e, str):
                     return
 
-            self.greetings = cfg_obj.greetings
+            self.greetings = cfg_obj["greetings"]
+
+        if "resources" in cfg_obj and isinstance(cfg_obj["resources"], list):
+            for res in cfg_obj["resources"]:
+                if "name" not in res or "link" not in res:
+                    continue
+
+                if "desc" not in res:
+                    res["desc"] = ""
+
+                self.resources.append(
+                    Resource(res["name"], res["link"], res["desc"])
+                )
+
 
 botconfig = BotConfig()

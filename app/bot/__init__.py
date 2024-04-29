@@ -39,7 +39,7 @@ async def _handle_command(command: str, args: list[str], message: discord.Messag
             response += "Unknown command" # TODO: Create better message
     
     response += f"""\n```\ncmd: {command}\nargs: {args}\n```"""
-    await message.channel.send(response)
+    await message.channel.send(response, suppress_embeds=True)
 
 
 @client.event

@@ -33,10 +33,10 @@ config.CONFIG_FILE = os.path.join(config.DATA_DIR, config.CONFIG_FILE)
 
 # Import internal modules that depend on configuration after changes
 import bot # TODO: Why can't I do `from . import bot`?
-#import bot.config as botcfg
+import bot.config as botcfg
 
-#with open(config.CONFIG_FILE) as f:
-    #botcfg.botconfig.load_from_file(f)
+with open(config.CONFIG_FILE) as f:
+    botcfg.botconfig.load_from_file(f)
 
 
 # Run bot
