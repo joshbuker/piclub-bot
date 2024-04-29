@@ -2,10 +2,10 @@ import discord
 
 from . import config as _botcfg
 
-intents = discord.Intents.default()
-intents.message_content = True
+_intents = discord.Intents.default()
+_intents.message_content = True
 
-client = discord.Client(intents=intents)
+client = discord.Client(intents=_intents)
 
 def _is_command(text: str) -> bool:
     return text.startswith(_botcfg.botconfig.command_prefix)
@@ -25,7 +25,21 @@ def _is_greeting(message: discord.Message) -> bool:
 
 
 async def _handle_command(command: str, args: list[str], message: discord.Message):
-    await message.channel.send(f"""```\ncmd: {command}\nargs: {args}\n```""")
+    response = ""
+    match command:
+        case "help":
+            response += "There is no help for you" # TODO: Create better message
+        case "resources":
+            if len(_botcfg.botconfig.resources) == 0:
+                response += "No resources" # TODO: Create better message
+            else:
+                for r in _botcfg.botconfig.resources:
+                    response += "- " + str(r) + "\n"
+        case _:
+            response += "Unknown command" # TODO: Create better message
+    
+    response += f"""\n```\ncmd: {command}\nargs: {args}\n```"""
+    await message.channel.send(response)
 
 
 @client.event
