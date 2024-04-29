@@ -31,6 +31,7 @@ config.CONFIG_FILE = os.path.join(config.DATA_DIR, config.CONFIG_FILE)
 
 # Create file if it doesn't exist
 if not os.path.exists(config.CONFIG_FILE):
+    print(f"file doesn't exist: {config.CONFIG_FILE}, creating...")
     open(config.CONFIG_FILE, "a")
 
 # -------- Main --------
@@ -41,7 +42,6 @@ import bot.config as botcfg
 
 with open(config.CONFIG_FILE, "r") as f:
     botcfg.botconfig.load_from_file(f)
-
 
 # Run bot
 try:
