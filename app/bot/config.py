@@ -31,6 +31,8 @@ class BotConfig:
 
     def load_from_file(self, f):
         cfg_obj = yaml.load(f, yaml.Loader)
+        if cfg_obj is None:
+            return
 
         if "command_prefix" in cfg_obj and isinstance(cfg_obj["command_prefix"], str):
             self.command_prefix = cfg_obj["command_prefix"]

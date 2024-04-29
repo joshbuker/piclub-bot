@@ -29,13 +29,17 @@ if not os.path.exists(config.DATA_DIR):
 config.DB_NAME = os.path.join(config.DATA_DIR, config.DB_NAME)
 config.CONFIG_FILE = os.path.join(config.DATA_DIR, config.CONFIG_FILE)
 
+# Create file if it doesn't exist
+if not os.path.exists(config.CONFIG_FILE):
+    open(config.CONFIG_FILE, "a")
+
 # -------- Main --------
 
 # Import internal modules that depend on configuration after changes
 import bot # TODO: Why can't I do `from . import bot`?
 import bot.config as botcfg
 
-with open(config.CONFIG_FILE) as f:
+with open(config.CONFIG_FILE, "r") as f:
     botcfg.botconfig.load_from_file(f)
 
 

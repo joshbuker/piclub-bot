@@ -42,7 +42,7 @@ async def _handle_command(command: str, args: list[str], message: discord.Messag
                 for r in _botcfg.botconfig.resources:
                     response += "- " + str(r) + "\n"
         case _:
-            response += "Unknown command. Type `" + pre+"help` for help" # TODO: Create better message
+            response += "Unknown command. Type `" + pre+"help` for help"
 
     await message.channel.send(response, suppress_embeds=True)
 
