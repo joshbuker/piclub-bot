@@ -1,3 +1,5 @@
+import random
+
 import discord
 
 from . import config as _botcfg
@@ -59,7 +61,10 @@ async def on_message(message: discord.Message):
         return
 
     if _is_greeting(message):
-        await message.channel.send(f"Hello {message.author.mention}")
+        await message.channel.send(
+            random.choice(_botcfg.botconfig.greetings).capitalize() +\
+            " " + message.author.mention
+        )
         return
 
     if _is_command(message.content):
