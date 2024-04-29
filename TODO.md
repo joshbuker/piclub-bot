@@ -3,7 +3,8 @@
 Requirements:
 
 - [ ] Ping Pi's/services we host
-- [ ] Provide links to resources (github, documents, pictures)
+- [x] Provide links to resources (github, documents, pictures)
+- [ ] Runs in a container
 
 Wish List:
 

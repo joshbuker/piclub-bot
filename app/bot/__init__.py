@@ -26,19 +26,24 @@ def _is_greeting(message: discord.Message) -> bool:
 
 async def _handle_command(command: str, args: list[str], message: discord.Message):
     response = ""
-    match command:
-        case "help":
-            response += "There is no help for you" # TODO: Create better message
-        case "resources":
+    pre = _botcfg.botconfig.command_prefix
+    match command.lower():
+        case "help" | "h":
+            response +=\
+                "```\n" +\
+                pre+"help       " + pre+"h  -  " + "show this help message\n" +\
+                pre+"resources  " + pre+"r  -  " + "list resources\n" +\
+                "```"
+
+        case "resources" | "r":
             if len(_botcfg.botconfig.resources) == 0:
-                response += "No resources" # TODO: Create better message
+                response += "There are currently no resources"
             else:
                 for r in _botcfg.botconfig.resources:
                     response += "- " + str(r) + "\n"
         case _:
-            response += "Unknown command" # TODO: Create better message
-    
-    response += f"""\n```\ncmd: {command}\nargs: {args}\n```"""
+            response += "Unknown command. Type `" + pre+"help` for help" # TODO: Create better message
+
     await message.channel.send(response, suppress_embeds=True)
 
 
