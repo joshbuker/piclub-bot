@@ -27,6 +27,53 @@ def _is_greeting(message: discord.Message) -> bool:
     return client.user in message.mentions
 
 
+#def _split_text(text: str) -> list[str]:
+    #"""
+    #Split text into <2000 character chunks
+    #"""
+    #if len(text) <= 10:
+        #return [text]
+
+    #split_text = []
+
+    #while True:
+        #idx = 0
+        #for c in (" ", "\n", "\t"):
+            #idx = max(idx, text.rfind(c, 2000))
+
+        #split_text.append(text[0:idx])
+        #text = text[idx:]
+
+    #return split_text
+
+
+def _split_text(text: str, max_len: int = 2000) -> list[str]:
+    """
+    Split text into <=max_len character chunks
+
+    text: Text to be split
+    max_len: Maximum number of characters per chunk, 2000 by default
+    (the Discord maximum message length)
+    """
+    if len(text) <= max_len:
+        return [text]
+
+    split_text = []
+    while True:
+        idx = text.rfind(" ", 0, max_len+1)
+        if idx == -1:
+            idx = max_len
+
+        new = text[0:idx]
+        split_text.append(new.strip())
+
+        text = text[idx:]
+
+        if len(text) <= max_len:
+            split_text.append(text.strip())
+            return split_text
+
+
 async def _handle_command(command: str, args: list[str], message: discord.Message):
     response = ""
     pre = _botconf.botconfig.command_prefix
@@ -90,7 +137,12 @@ async def on_message(message: discord.Message):
             f" The user's name is {message.author.name}",
         )
         if not response is None:
-            await message.reply(response)
+            if len(response) > 2000:
+                for response_chunk in _split_text(response):
+                    await message.reply(response_chunk)
+            else:
+                await message.reply(response)
+
             await client.change_presence(status=discord.Status.online)
         else:
             await client.change_presence(status=discord.Status.idle)
