@@ -50,7 +50,7 @@ async def generate_response(
                 pull_model(_globalconf.LLM_MODEL)
 
             return None
-        except ConnectionError as e:
+        except Exception as e:
             print(f"Ollama server unavailable at {url}")
             return None
 
@@ -72,7 +72,7 @@ async def generate_response(
                 return response
 
         # Return response
-        return response
+        return None
 
 
 def pull_model(model: str):

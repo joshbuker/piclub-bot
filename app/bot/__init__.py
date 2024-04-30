@@ -70,6 +70,9 @@ async def on_message(message: discord.Message):
         )
         if not response is None:
             await message.reply(response)
+            await client.change_presence(status=discord.Status.online)
+        else:
+            await client.change_presence(status=discord.Status.idle)
         return
 
     if _is_command(message.content):
@@ -88,4 +91,7 @@ async def on_message(message: discord.Message):
         )
         if not response is None:
             await message.reply(response)
+            await client.change_presence(status=discord.Status.online)
+        else:
+            await client.change_presence(status=discord.Status.idle)
         return
