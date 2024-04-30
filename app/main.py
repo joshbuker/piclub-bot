@@ -7,44 +7,44 @@ import os
 from dotenv import load_dotenv
 
 # -------- Config --------
-import config
+import globalconf
 
 # Load .env variables into environment
 load_dotenv()
 
 # Load configuration from environment
-config.DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-if config.DISCORD_TOKEN is None or config.DISCORD_TOKEN == "":
+globalconf.DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+if globalconf.DISCORD_TOKEN is None or globalconf.DISCORD_TOKEN == "":
     print("Error: DISCORD_TOKEN must be set in environment")
     exit(1)
 
 # The root directory should be the top level directory in this repo
-config.ROOT_DIR = os.curdir
+globalconf.ROOT_DIR = os.curdir
 
-config.DATA_DIR = os.path.join(config.ROOT_DIR, config.DATA_DIR)
+globalconf.DATA_DIR = os.path.join(globalconf.ROOT_DIR, globalconf.DATA_DIR)
 
-if not os.path.exists(config.DATA_DIR):
-    os.mkdir(config.DATA_DIR) # Ensure data directory is present
+if not os.path.exists(globalconf.DATA_DIR):
+    os.mkdir(globalconf.DATA_DIR) # Ensure data directory is present
 
-config.DB_NAME = os.path.join(config.DATA_DIR, config.DB_NAME)
-config.CONFIG_FILE = os.path.join(config.DATA_DIR, config.CONFIG_FILE)
+globalconf.DB_NAME = os.path.join(globalconf.DATA_DIR, globalconf.DB_NAME)
+globalconf.CONFIG_FILE = os.path.join(globalconf.DATA_DIR, globalconf.CONFIG_FILE)
 
 # Create file if it doesn't exist
-if not os.path.exists(config.CONFIG_FILE):
-    print(f"file doesn't exist: {config.CONFIG_FILE}, creating...")
-    open(config.CONFIG_FILE, "a")
+if not os.path.exists(globalconf.CONFIG_FILE):
+    print(f"file doesn't exist: {globalconf.CONFIG_FILE}, creating...")
+    open(globalconf.CONFIG_FILE, "a")
 
 # -------- Main --------
 
 # Import internal modules that depend on configuration after changes
 import bot # TODO: Why can't I do `from . import bot`?
-import bot.config as botcfg
+from bot import botconf
 
-with open(config.CONFIG_FILE, "r") as f:
-    botcfg.botconfig.load_from_file(f)
+with open(globalconf.CONFIG_FILE, "r") as f:
+    botconf.botconfig.load_from_file(f)
 
 # Run bot
 try:
-    bot.client.run(config.DISCORD_TOKEN)
+    bot.client.run(globalconf.DISCORD_TOKEN)
 except KeyboardInterrupt:
     print("Ctrl-C") # Exit cleanly in case of a KeyboardInterrupt

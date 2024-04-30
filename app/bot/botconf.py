@@ -23,11 +23,15 @@ class BotConfig:
     command_prefix: str
     greetings: list[str]
     resources: list[Resource]
+    auto_pull_model: bool
+    system_prompt: str
 
     def __init__(self):
         self.command_prefix = "!"
         self.greetings = ["hello", "hi", "hey"]
         self.resources = []
+        self.auto_pull_model = False
+        self.system_prompt = ""
 
     def load_from_file(self, f):
         cfg_obj = yaml.load(f, yaml.Loader)
@@ -56,6 +60,12 @@ class BotConfig:
                 self.resources.append(
                     Resource(res["name"], res["link"], res["desc"])
                 )
+
+        if "auto_pull_model" in cfg_obj and isinstance(cfg_obj["auto_pull_model"], bool):
+            self.auto_pull_model = cfg_obj["auto_pull_model"]
+
+        if "system_prompt" in cfg_obj and isinstance(cfg_obj["system_prompt"], str):
+            self.system_prompt = cfg_obj["system_prompt"]
 
 
 botconfig = BotConfig()

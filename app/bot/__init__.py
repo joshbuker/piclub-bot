@@ -2,7 +2,8 @@ import random
 
 import discord
 
-from . import config as _botcfg
+from . import botconf as _botconf
+from . import llm
 
 _intents = discord.Intents.default()
 _intents.message_content = True
@@ -10,12 +11,12 @@ _intents.message_content = True
 client = discord.Client(intents=_intents)
 
 def _is_command(text: str) -> bool:
-    return text.startswith(_botcfg.botconfig.command_prefix)
+    return text.startswith(_botconf.botconfig.command_prefix)
 
 
 def _is_greeting(message: discord.Message) -> bool:
     has_greeting_prefix = False
-    for greeting in _botcfg.botconfig.greetings:
+    for greeting in _botconf.botconfig.greetings:
         if message.content.lower().startswith(greeting):
             has_greeting_prefix = True
             break
@@ -28,7 +29,7 @@ def _is_greeting(message: discord.Message) -> bool:
 
 async def _handle_command(command: str, args: list[str], message: discord.Message):
     response = ""
-    pre = _botcfg.botconfig.command_prefix
+    pre = _botconf.botconfig.command_prefix
     match command.lower():
         case "help" | "h":
             response +=\
@@ -38,10 +39,10 @@ async def _handle_command(command: str, args: list[str], message: discord.Messag
                 "```"
 
         case "resources" | "r":
-            if len(_botcfg.botconfig.resources) == 0:
+            if len(_botconf.botconfig.resources) == 0:
                 response += "There are currently no resources"
             else:
-                for r in _botcfg.botconfig.resources:
+                for r in _botconf.botconfig.resources:
                     response += "- " + str(r) + "\n"
         case _:
             response += "Unknown command. Type `" + pre+"help` for help"
@@ -61,17 +62,28 @@ async def on_message(message: discord.Message):
         return
 
     if _is_greeting(message):
-        await message.channel.send(
-            random.choice(_botcfg.botconfig.greetings).capitalize() +\
-            " " + message.author.mention
+        response = await llm.generate_response(
+            message,
+            _botconf.botconfig.system_prompt +
+            "You will respond with a somewhat short greeting and mention their name. " +
+            f"Their name is {message.author.name}.",
         )
+        await message.reply(response)
         return
 
     if _is_command(message.content):
         split_message = message.content.strip(" \t\n").split()
-        command = split_message[0][len(_botcfg.botconfig.command_prefix):]
+        command = split_message[0][len(_botconf.botconfig.command_prefix):]
         args = split_message[1:]
 
         await _handle_command(command, args, message)
         return
 
+    if client.user in message.mentions:
+        response = await llm.generate_response(
+            message,
+            _botconf.botconfig.system_prompt +
+            f" The user's name is {message.author.name}",
+        )
+        if not response is None:
+            await message.reply(response)
