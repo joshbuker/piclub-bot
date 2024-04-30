@@ -23,6 +23,7 @@ class BotConfig:
     command_prefix: str
     greetings: list[str]
     resources: list[Resource]
+    bot_name: str
     llm_enabled: bool
     auto_pull_model: bool
     system_prompt: str
@@ -31,6 +32,7 @@ class BotConfig:
         self.command_prefix = "!"
         self.greetings = ["hello", "hi", "hey"]
         self.resources = []
+        self.bot_name = ""
         self.llm_enabled = False
         self.auto_pull_model = False
         self.system_prompt = ""
@@ -63,6 +65,9 @@ class BotConfig:
                     Resource(res["name"], res["link"], res["desc"])
                 )
 
+        if "bot_name" in cfg_obj and isinstance(cfg_obj["bot_name"], str):
+            self.bot_name = cfg_obj["bot_name"]
+
         if "llm_enabled" in cfg_obj and isinstance(cfg_obj["llm_enabled"], bool):
             self.llm_enabled = cfg_obj["llm_enabled"]
 
@@ -70,7 +75,12 @@ class BotConfig:
             self.auto_pull_model = cfg_obj["auto_pull_model"]
 
         if "system_prompt" in cfg_obj and isinstance(cfg_obj["system_prompt"], str):
-            self.system_prompt = cfg_obj["system_prompt"]
+            # FIXME: This is a bad place to put the information about commands
+            name_prompt = "" if self.bot_name == "" else f" Your name is {self.bot_name}."
+            self.system_prompt = cfg_obj["system_prompt"] +\
+                name_prompt +\
+                f" You can help people if they run the command `{self.command_prefix}help`." +\
+                f" You can give information about resources if they type the command `{self.command_prefix}resources`."
 
 
 botconfig = BotConfig()
