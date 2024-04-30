@@ -30,7 +30,7 @@ async def generate_response(
             r = requests.post(
                 url,
                 json={
-                    "model": _globalconf.LLM_MODEL,
+                    "model": _botconf.botconfig.llm_model,
                     "prompt": message.content,
                     "system": system_prompt,
                     "context": [],
@@ -47,10 +47,10 @@ async def generate_response(
             print(f"Error:\n{err_res.json()}")
 
             if err_res.status_code == 404 and auto_pull_model:
-                pull_model(_globalconf.LLM_MODEL)
+                pull_model(_botconf.botconfig.llm_model)
 
             return None
-        except Exception as e:
+        except ConnectionError as e:
             print(f"Ollama server unavailable at {url}")
             return None
 

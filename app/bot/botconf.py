@@ -25,6 +25,7 @@ class BotConfig:
     resources: list[Resource]
     bot_name: str
     llm_enabled: bool
+    llm_model: str
     auto_pull_model: bool
     system_prompt: str
 
@@ -34,6 +35,7 @@ class BotConfig:
         self.resources = []
         self.bot_name = ""
         self.llm_enabled = False
+        self.llm_model = "llama2"
         self.auto_pull_model = False
         self.system_prompt = ""
 
@@ -70,6 +72,9 @@ class BotConfig:
 
         if "llm_enabled" in cfg_obj and isinstance(cfg_obj["llm_enabled"], bool):
             self.llm_enabled = cfg_obj["llm_enabled"]
+
+        if "llm_model" in cfg_obj and isinstance(cfg_obj["llm_model"], str):
+            self.llm_model = cfg_obj["llm_model"]
 
         if "auto_pull_model" in cfg_obj and isinstance(cfg_obj["auto_pull_model"], bool):
             self.auto_pull_model = cfg_obj["auto_pull_model"]

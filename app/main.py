@@ -41,11 +41,7 @@ if not os.path.exists(globalconf.CONFIG_FILE):
     print(f"file doesn't exist: {globalconf.CONFIG_FILE}, creating...")
     open(globalconf.CONFIG_FILE, "a")
 
-# LLM Config
-llm_model = os.getenv("LLM_MODEL")
-if not llm_model is None:
-    globalconf.LLM_MODEL = llm_model
-
+# LLM Server Config
 llm_host = os.getenv("LLM_HOST")
 if not llm_host is None:
     globalconf.LLM_HOST = llm_host
@@ -55,7 +51,6 @@ if not llm_port is None:
     globalconf.LLM_PORT = llm_port
 
 print("LLM:")
-print(f"Model: {globalconf.LLM_MODEL}")
 print(f"Host: {globalconf.LLM_HOST}")
 print(f"Port: {globalconf.LLM_PORT}")
 
