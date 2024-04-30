@@ -26,13 +26,26 @@ globalconf.DATA_DIR = os.path.join(globalconf.ROOT_DIR, globalconf.DATA_DIR)
 if not os.path.exists(globalconf.DATA_DIR):
     os.mkdir(globalconf.DATA_DIR) # Ensure data directory is present
 
-globalconf.DB_NAME = os.path.join(globalconf.DATA_DIR, globalconf.DB_NAME)
+globalconf.DB_FILE = os.path.join(globalconf.DATA_DIR, globalconf.DB_FILE)
 globalconf.CONFIG_FILE = os.path.join(globalconf.DATA_DIR, globalconf.CONFIG_FILE)
 
 # Create file if it doesn't exist
 if not os.path.exists(globalconf.CONFIG_FILE):
     print(f"file doesn't exist: {globalconf.CONFIG_FILE}, creating...")
     open(globalconf.CONFIG_FILE, "a")
+
+# LLM Config
+llm_model = os.getenv("LLM_MODEL")
+if not llm_model is None:
+    globalconf.LLM_MODEL = llm_model
+
+llm_host = os.getenv("LLM_HOST")
+if not llm_host is None:
+    globalconf.LLM_HOST = llm_host
+
+llm_port = os.getenv("LLM_PORT")
+if not llm_port is None:
+    globalconf.LLM_PORT = llm_port
 
 # -------- Main --------
 

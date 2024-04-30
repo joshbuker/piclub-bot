@@ -68,7 +68,8 @@ async def on_message(message: discord.Message):
             "You will respond with a somewhat short greeting and mention their name. " +
             f"Their name is {message.author.name}.",
         )
-        await message.reply(response)
+        if not response is None:
+            await message.reply(response)
         return
 
     if _is_command(message.content):
@@ -87,3 +88,4 @@ async def on_message(message: discord.Message):
         )
         if not response is None:
             await message.reply(response)
+        return

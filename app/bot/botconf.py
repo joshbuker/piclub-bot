@@ -23,6 +23,7 @@ class BotConfig:
     command_prefix: str
     greetings: list[str]
     resources: list[Resource]
+    llm_enabled: bool
     auto_pull_model: bool
     system_prompt: str
 
@@ -30,6 +31,7 @@ class BotConfig:
         self.command_prefix = "!"
         self.greetings = ["hello", "hi", "hey"]
         self.resources = []
+        self.llm_enabled = False
         self.auto_pull_model = False
         self.system_prompt = ""
 
@@ -60,6 +62,9 @@ class BotConfig:
                 self.resources.append(
                     Resource(res["name"], res["link"], res["desc"])
                 )
+
+        if "llm_enabled" in cfg_obj and isinstance(cfg_obj["llm_enabled"], bool):
+            self.llm_enabled = cfg_obj["llm_enabled"]
 
         if "auto_pull_model" in cfg_obj and isinstance(cfg_obj["auto_pull_model"], bool):
             self.auto_pull_model = cfg_obj["auto_pull_model"]
