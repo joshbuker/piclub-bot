@@ -3,6 +3,7 @@ import random
 import discord
 
 import globalconf as _globalconf
+from logtools import log_print
 from . import botconf as _botconf
 from . import llm
 
@@ -93,7 +94,7 @@ async def _handle_command(command: str, args: list[str], message: discord.Messag
 
 @client.event
 async def on_ready():
-    print(f"Logged in as {client.user}")
+    log_print(f"Logged in as {client.user}")
 
 
 @client.event

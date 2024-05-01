@@ -6,6 +6,7 @@ import json
 import aiohttp
 
 import globalconf as _globalconf
+from logtools import log_print
 from . import botconf as _botconf
 
 import discord
@@ -16,11 +17,11 @@ async def generate_response(
     auto_pull_model: bool = _botconf.botconfig.auto_pull_model # TODO: Use this again
 ) -> str | None:
     url = f"http://{_globalconf.LLM_HOST}:{_globalconf.LLM_PORT}/api/generate"
-    print(f"url: {url}")
+    log_print(f"url: {url}")
 
     # While receiving responses, show typing status
     async with message.channel.typing():
-        print(f"Generating response ...\nUser prompt:\n{message.content}\nSystem prompt:\n{system_prompt}")
+        log_print(f"Generating response ...\nUser prompt:\n{message.content}\nSystem prompt:\n{system_prompt}")
 
         async with aiohttp.ClientSession() as cs:
             async with cs.post(url, json={
@@ -33,12 +34,12 @@ async def generate_response(
                 try:
                     data = await res.json()
                     if "error" in data:
-                        print(f"Error: {data['error']}")
-                        print(f"data: {json.dumps(data)}")
+                        log_print(f"Error: {data['error']}")
+                        log_print(f"data: {json.dumps(data)}")
                         return None
 
                     dur = data["total_duration"] / 1_000_000_000
-                    print(f"response took {dur:.3f} seconds")
+                    log_print(f"response took {dur:.3f} seconds")
 
                     return data["response"]
 
@@ -48,14 +49,14 @@ async def generate_response(
                     #if not isinstance(err_res, requests.models.Response):
                         #raise e
 
-                    print(f"Error:\n{e}\nType: {type(e)}")
+                    log_print(f"Error:\n{e}\nType: {type(e)}")
 
                     #if err_res.status_code == 404 and auto_pull_model:
                         #pull_model(_botconf.botconfig.llm_model)
 
                     return None
                 #except ConnectionError as e:
-                    #print(f"Ollama server unavailable at {url}")
+                    #log_print(f"Ollama server unavailable at {url}")
                     #return None
 
         #response = ""
@@ -73,17 +74,17 @@ async def generate_response(
 
             ## Return response if done
             #if body.get("done", False):
-                #print("Done typing (done)")
+                #log_print("Done typing (done)")
                 #return response
 
-        #print("Done typing (no more lines)")
+        #log_print("Done typing (no more lines)")
 
         ## Return response
         #return None
 
 
 #def pull_model(model: str):
-    #print(f"Pulling model: {model} ...")
+    #log_print(f"Pulling model: {model} ...")
     #r = requests.post(
         #f"http://{_globalconf.LLM_HOST}:{_globalconf.LLM_PORT}/api/pull",
         #json={
@@ -93,4 +94,4 @@ async def generate_response(
     #)
 
     #r.raise_for_status()
-    #print(r.json())
+    #log_print(r.json())

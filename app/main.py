@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 # -------- Config --------
 import globalconf
+from logtools import log_print
 
 # Load .env variables into environment
 load_dotenv()
@@ -15,7 +16,7 @@ load_dotenv()
 # Load configuration from environment
 globalconf.DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 if globalconf.DISCORD_TOKEN is None or globalconf.DISCORD_TOKEN == "":
-    print("Error: DISCORD_TOKEN must be set in environment")
+    log_print("Error: DISCORD_TOKEN must be set in environment")
     exit(1)
 
 discord_guild = os.getenv("DISCORD_GUILD")
@@ -30,24 +31,24 @@ else:
 # The root directory should be the top level directory in this repo
 globalconf.ROOT_DIR = os.curdir
 
-print(f"ROOT_DIR: {os.path.abspath(globalconf.ROOT_DIR)}")
+log_print(f"ROOT_DIR: {os.path.abspath(globalconf.ROOT_DIR)}")
 
 globalconf.DATA_DIR = os.path.join(globalconf.ROOT_DIR, globalconf.DATA_DIR)
 
-print(f"DATA_DIR: {os.path.abspath(globalconf.DATA_DIR)}")
+log_print(f"DATA_DIR: {os.path.abspath(globalconf.DATA_DIR)}")
 
 if not os.path.exists(globalconf.DATA_DIR):
     os.mkdir(globalconf.DATA_DIR) # Ensure data directory is present
 
 globalconf.DB_FILE = os.path.join(globalconf.DATA_DIR, globalconf.DB_FILE)
-print(f"DB_FILE: {os.path.abspath(globalconf.DB_FILE)}")
+log_print(f"DB_FILE: {os.path.abspath(globalconf.DB_FILE)}")
 
 globalconf.CONFIG_FILE = os.path.join(globalconf.DATA_DIR, globalconf.CONFIG_FILE)
-print(f"CONFIG_FILE: {os.path.abspath(globalconf.CONFIG_FILE)}")
+log_print(f"CONFIG_FILE: {os.path.abspath(globalconf.CONFIG_FILE)}")
 
 # Create file if it doesn't exist
 if not os.path.exists(globalconf.CONFIG_FILE):
-    print(f"file doesn't exist: {globalconf.CONFIG_FILE}, creating...")
+    log_print(f"file doesn't exist: {globalconf.CONFIG_FILE}, creating...")
     open(globalconf.CONFIG_FILE, "a")
 
 # LLM Server Config
@@ -62,9 +63,9 @@ if not llm_port is None:
     except:
         globalconf.LLM_PORT = 11434
 
-print("LLM:")
-print(f"Host: {globalconf.LLM_HOST}")
-print(f"Port: {globalconf.LLM_PORT}")
+log_print("LLM:")
+log_print(f"Host: {globalconf.LLM_HOST}")
+log_print(f"Port: {globalconf.LLM_PORT}")
 
 # -------- Main --------
 
@@ -79,4 +80,4 @@ with open(globalconf.CONFIG_FILE, "r") as f:
 try:
     bot.client.run(globalconf.DISCORD_TOKEN)
 except KeyboardInterrupt:
-    print("Ctrl-C") # Exit cleanly in case of a KeyboardInterrupt
+    log_print("Ctrl-C") # Exit cleanly in case of a KeyboardInterrupt
