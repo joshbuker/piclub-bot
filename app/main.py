@@ -18,6 +18,15 @@ if globalconf.DISCORD_TOKEN is None or globalconf.DISCORD_TOKEN == "":
     print("Error: DISCORD_TOKEN must be set in environment")
     exit(1)
 
+discord_guild = os.getenv("DISCORD_GUILD")
+if discord_guild is None or discord_guild == "":
+    globalconf.DISCORD_GUILD = None
+else:
+    try:
+        globalconf.DISCORD_GUILD = int(discord_guild)
+    except:
+        globalconf.DISCORD_GUILD = None
+
 # The root directory should be the top level directory in this repo
 globalconf.ROOT_DIR = os.curdir
 
@@ -48,7 +57,10 @@ if not llm_host is None:
 
 llm_port = os.getenv("LLM_PORT")
 if not llm_port is None:
-    globalconf.LLM_PORT = llm_port
+    try:
+        globalconf.LLM_PORT = int(llm_port)
+    except:
+        globalconf.LLM_PORT = 11434
 
 print("LLM:")
 print(f"Host: {globalconf.LLM_HOST}")

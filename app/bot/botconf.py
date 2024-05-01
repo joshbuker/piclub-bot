@@ -22,6 +22,7 @@ class Resource:
 class BotConfig:
     command_prefix: str
     greetings: list[str]
+    enforce_guild: bool
     resources: list[Resource]
     bot_name: str
     llm_enabled: bool
@@ -32,6 +33,7 @@ class BotConfig:
     def __init__(self):
         self.command_prefix = "!"
         self.greetings = ["hello", "hi", "hey"]
+        self.enforce_guild = True
         self.resources = []
         self.bot_name = ""
         self.llm_enabled = False
@@ -54,6 +56,9 @@ class BotConfig:
                     return
 
             self.greetings = cfg_obj["greetings"]
+
+        if "enforce_guild" in cfg_obj and isinstance(cfg_obj["enforce_guild"], bool):
+            self.enforce_guild = cfg_obj["enforce_guild"]
 
         if "resources" in cfg_obj and isinstance(cfg_obj["resources"], list):
             for res in cfg_obj["resources"]:

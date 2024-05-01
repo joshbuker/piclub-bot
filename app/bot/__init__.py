@@ -2,6 +2,7 @@ import random
 
 import discord
 
+import globalconf as _globalconf
 from . import botconf as _botconf
 from . import llm
 
@@ -27,24 +28,17 @@ def _is_greeting(message: discord.Message) -> bool:
     return client.user in message.mentions
 
 
-#def _split_text(text: str) -> list[str]:
-    #"""
-    #Split text into <2000 character chunks
-    #"""
-    #if len(text) <= 10:
-        #return [text]
+def _in_guild(message: discord.Message) -> bool:
+    # If no guild specified, then it is "In the guild"
+    if _globalconf.DISCORD_GUILD is None:
+        return True
 
-    #split_text = []
+    # If it is a private message, then it has no guild
+    if message.guild is None:
+        return False
 
-    #while True:
-        #idx = 0
-        #for c in (" ", "\n", "\t"):
-            #idx = max(idx, text.rfind(c, 2000))
-
-        #split_text.append(text[0:idx])
-        #text = text[idx:]
-
-    #return split_text
+    # Return whether the messaged guild and the global guild are the same
+    return message.guild.id == _globalconf.DISCORD_GUILD
 
 
 def _split_text(text: str, max_len: int = 2000) -> list[str]:
@@ -104,6 +98,11 @@ async def on_ready():
 
 @client.event
 async def on_message(message: discord.Message):
+    # Don't respond to messages from different guilds if it is enforced
+    if not _in_guild(message):
+        if _botconf.botconfig.enforce_guild:
+            return
+
     # Don't respond to this bot's own messages
     if message.author == client.user:
         return
