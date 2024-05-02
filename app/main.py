@@ -29,21 +29,15 @@ else:
         globalconf.DISCORD_GUILD = None
 
 # The root directory should be the top level directory in this repo
-globalconf.ROOT_DIR = os.curdir
-
 log_print(f"ROOT_DIR: {os.path.abspath(globalconf.ROOT_DIR)}")
-
-globalconf.DATA_DIR = os.path.join(globalconf.ROOT_DIR, globalconf.DATA_DIR)
 
 log_print(f"DATA_DIR: {os.path.abspath(globalconf.DATA_DIR)}")
 
 if not os.path.exists(globalconf.DATA_DIR):
     os.mkdir(globalconf.DATA_DIR) # Ensure data directory is present
 
-globalconf.DB_FILE = os.path.join(globalconf.DATA_DIR, globalconf.DB_FILE)
 log_print(f"DB_FILE: {os.path.abspath(globalconf.DB_FILE)}")
 
-globalconf.CONFIG_FILE = os.path.join(globalconf.DATA_DIR, globalconf.CONFIG_FILE)
 log_print(f"CONFIG_FILE: {os.path.abspath(globalconf.CONFIG_FILE)}")
 
 # Create file if it doesn't exist

@@ -1,12 +1,17 @@
+import os as _os
+
 # Discord config
 DISCORD_TOKEN: str | None = None
 DISCORD_GUILD: int | None = None
 
 # File config
-ROOT_DIR: str = "."
-DATA_DIR: str = "data"
-DB_FILE: str = "data.db"
-CONFIG_FILE: str = "config.yaml"
+ROOT_DIR: str = _os.path.join(
+    _os.path.abspath(_os.path.dirname(__file__)),
+    _os.pardir
+)
+DATA_DIR: str = _os.path.join(ROOT_DIR, "data")
+DB_FILE: str = _os.path.join(DATA_DIR, "data.db")
+CONFIG_FILE: str = _os.path.join(DATA_DIR, "config.yaml")
 
 # LLM server config
 LLM_HOST: str = "localhost"
