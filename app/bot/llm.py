@@ -24,14 +24,14 @@ async def generate_response(
         log_print(f"Generating response ...\nUser prompt:\n{message.content}\nSystem prompt:\n{system_prompt}")
 
         async with aiohttp.ClientSession() as cs:
-            async with cs.post(url, json={
-                "model": _botconf.botconfig.llm_model,
-                "prompt": message.content,
-                "system": system_prompt,
-                "context": [],
-                "stream": False,
-            }) as res:
-                try:
+            try:
+                async with cs.post(url, json={
+                    "model": _botconf.botconfig.llm_model,
+                    "prompt": message.content,
+                    "system": system_prompt,
+                    "context": [],
+                    "stream": False,
+                }) as res:
                     data = await res.json()
                     if "error" in data:
                         log_print(f"Error: {data['error']}")
@@ -44,20 +44,20 @@ async def generate_response(
                     return data["response"]
 
 
-                except Exception as e:
-                    #err_res = e.response
-                    #if not isinstance(err_res, requests.models.Response):
-                        #raise e
+            except Exception as e:
+                #err_res = e.response
+                #if not isinstance(err_res, requests.models.Response):
+                    #raise e
 
-                    log_print(f"Error:\n{e}\nType: {type(e)}")
+                log_print(f"Error: {e}\nType: {type(e)}")
 
-                    #if err_res.status_code == 404 and auto_pull_model:
-                        #pull_model(_botconf.botconfig.llm_model)
+                #if err_res.status_code == 404 and auto_pull_model:
+                    #pull_model(_botconf.botconfig.llm_model)
 
-                    return None
-                #except ConnectionError as e:
-                    #log_print(f"Ollama server unavailable at {url}")
-                    #return None
+                return None
+            #except ConnectionError as e:
+                #log_print(f"Ollama server unavailable at {url}")
+                #return None
 
         #response = ""
             ## Loop through tokens as they are streamed in
