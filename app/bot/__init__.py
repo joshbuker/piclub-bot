@@ -12,6 +12,7 @@ _intents.message_content = True
 
 client = discord.Client(intents=_intents)
 
+
 def _is_command(text: str) -> bool:
     return text.startswith(_botconf.botconfig.command_prefix)
 
@@ -34,7 +35,8 @@ def _in_guild(message: discord.Message) -> bool:
     if _globalconf.DISCORD_GUILD is None:
         return True
 
-    # If it is a private message, then it has no guild
+    # If it is a private message, then it has no guild, and thus
+    # cannot be in the correct one
     if message.guild is None:
         return False
 
@@ -109,12 +111,17 @@ async def on_message(message: discord.Message):
         return
 
     if _is_greeting(message):
+        log_print("received greeting")
+        greeting = random.choice(_botconf.botconfig.greetings)
+        log_print(f"greeting: {greeting}")
         response = await llm.generate_response(
             message,
             _botconf.botconfig.system_prompt +
-            "You will respond with a somewhat short greeting and mention their name. " +
-            f"Their name is {message.author.name}.",
+            " You will respond with a somewhat short greeting and mention their name." +
+            f" You will incorperate the phrase \"{greeting}\" into your greeting." +
+            f" Their name is {message.author.name}.",
         )
+        log_print(f"response: `{response}`")
         if not response is None:
             await message.reply(response)
             await client.change_presence(status=discord.Status.online)
@@ -123,6 +130,7 @@ async def on_message(message: discord.Message):
         return
 
     if _is_command(message.content):
+        log_print("received command")
         split_message = message.content.strip(" \t\n").split()
         command = split_message[0][len(_botconf.botconfig.command_prefix):]
         args = split_message[1:]
@@ -131,13 +139,16 @@ async def on_message(message: discord.Message):
         return
 
     if client.user in message.mentions:
+        log_print("received message")
         response = await llm.generate_response(
             message,
             _botconf.botconfig.system_prompt +
             f" The user's name is {message.author.name}",
         )
+        log_print(f"response: `{response}`")
         if not response is None:
             if len(response) > 2000:
+                # Split message into <=2000 character chunks
                 for response_chunk in _split_text(response):
                     await message.reply(response_chunk)
             else:
