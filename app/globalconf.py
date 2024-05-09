@@ -7,11 +7,15 @@ DISCORD_GUILD: int | None = None
 # File config
 ROOT_DIR: str = _os.path.join(
     _os.path.abspath(_os.path.dirname(__file__)),
-    _os.pardir
+    _os.pardir,
 )
 DATA_DIR: str = _os.path.join(ROOT_DIR, "data")
 DB_FILE: str = _os.path.join(DATA_DIR, "data.db")
 CONFIG_FILE: str = _os.path.join(DATA_DIR, "config.yaml")
+DEFAULT_CONFIG_FILE: str = _os.path.join(
+    _os.path.dirname(__file__),
+    "default-config.yaml",
+)
 
 # LLM server config
 LLM_HOST: str = "localhost"

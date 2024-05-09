@@ -1,0 +1,49 @@
+#=========================================================#
+# This is the default configuration for the bot.          #
+# If the `data/config.yaml` file is empty, then           #
+# all the config will come from this file.                #
+# If any config option is set in `data/config.yaml`, then #
+# the option in this file will be overwritten.            #
+#=========================================================#
+
+# The prefix to put before a message to mark it as a command. (e.g. !help)
+command_prefix: "!"
+
+# List of words that mark a message as a
+# "greeting" if they are at the beggining of the message
+greetings:
+  - hello
+  - hi
+  - hey
+
+# Whether the bot will ignore messages from guilds other
+# than the one specified in the DISCORD_GUILD
+enforce_guild: true
+
+
+# The name of the bot
+bot_name: ""
+
+# Whether Ollama integration is enabled
+llm_enabled: true
+
+# Which LLM to use when generating responses
+llm_model: llama2
+
+# Whether to automatically pull the `llm_model` if it is
+# not available on the Ollama server
+auto_pull_model: false
+
+# System prompt to pass to the LLM.
+# Use this to customize the responses of the LLM.
+# (e.g. "You are a robot built by the Raspberry Pi Club")
+system_prompt: ""
+
+
+# List of resources to show when `!resources` is run.
+# The `name` and `link` fields are mandatory, `desc` is optional.
+resources:
+  - name: Bot Source Code
+    link: https://github.com/btc-raspberrypiclub/piclub-bot
+    desc: Link to this bot's source code
+
