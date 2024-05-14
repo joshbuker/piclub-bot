@@ -39,6 +39,7 @@ if not os.path.exists(globalconf.DATA_DIR):
 log_print(f"DB_FILE: {os.path.abspath(globalconf.DB_FILE)}")
 
 log_print(f"CONFIG_FILE: {os.path.abspath(globalconf.CONFIG_FILE)}")
+log_print(f"DEFAULT_CONFIG_FILE: {os.path.abspath(globalconf.DEFAULT_CONFIG_FILE)}")
 
 # Create file if it doesn't exist
 if not os.path.exists(globalconf.CONFIG_FILE):
