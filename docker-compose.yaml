@@ -5,5 +5,25 @@ services:
     image: piclub-bot
     build: .
     env_file: .env
+
     volumes:
       - ./data:/bot/data
+
+  llm:
+    image: ollama/ollama
+    # Ollama models
+    volumes:
+      - ollama:/root/.ollama
+    expose:
+      - 11434
+    # Allow access to nvidia gpu
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  ollama:
